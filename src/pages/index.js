@@ -1,11 +1,18 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useEffect, useState } from 'react';
+// import ConnectWalletButton from '@/components/ConnectWalletButton';
+import ConnectWalletButton from "../components/ConnectWalletButton"
 
 export default function Home() {
+  const [navigator, setNavigator] = useState()
+
+  const isIOS = /iPad|Mozilla|iPhone|iPod/.test(navigator) && !window.MSStream;
+  
+  useEffect(() => {
+    setNavigator(window.navigator.userAgent)
+ }, [])
+
   return (
     <>
       <Head>
@@ -14,7 +21,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main>
+        <ConnectWalletButton />
+      </main>
+
+      {/* <main className={styles.main}>
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;
@@ -117,7 +128,7 @@ export default function Home() {
             </p>
           </a>
         </div>
-      </main>
+      </main> */}
     </>
   )
 }
