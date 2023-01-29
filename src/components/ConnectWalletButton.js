@@ -1,102 +1,62 @@
 import React from 'react'
+import connectors from '../hooks/config';
 import {useWeb3React} from "@web3-react/core"
-import HookWalletConnect, { resetWalletConnector, injected } from '../hooks/walletConnect';
-import connectors, {network} from '../hooks/config';
+import ConnectModal from './ConnectModal';
+import { useState } from 'react';
+import HookWalletConnect from '../hooks/walletConnect';
 
 const ConnectWalletButton = () => {
-    const web3reactContext = useWeb3React();
-    const [getWalletConnect, getChainID, getchain, chain, setChain, chain_id, setChain_id ] = HookWalletConnect()
-    const walletconnect = getWalletConnect()
-    async function openModal(connectorId){
-        if(connectorId == "walletconnect"){
-            try{
-                resetWalletConnector(walletconnect)
-                await web3reactContext.activate(walletconnect)                
-            }catch(x){
-              console.log("error: " + x)
-            }
-        }
-        if(connectorId == "metamask"){
-            try{
-                await web3reactContext.activate(injected)
-                setChain("ethereum")
-                console.log(chain)
-                await changeNetwork(chain)
-            }catch(err){
-                console.log(err)
-            }
-      }
+  const web3reactContext = useWeb3React();
+
+    const [showModal, setShowModal] = useState(false)
+    const [getWalletConnect, getChainID, getchain, chain, setChain, injected, setChain_id, chain_id ] = HookWalletConnect()
+
+    const selectNetwork =(e)=>{
+      console.log("chain_id: " + chain_id)
+      const target = e.target
+      let val = target.value
+      let d = target.getAttribute("data-net")
+      console.log(val + " d: " + d)
+      setChain_id(d)
+      setChain(val)
+      console.log("chain_id: " + chain_id)
     }
-
-    function disconnect(){
-    try{
-        web3reactContext.deactivate()
-    }catch(e){
-        console.log(e)
-    }
-    }
-
-      const changeNetwork = async (networkName) => {
-        if(window.ethereum){
-          try {
-            if (!window.ethereum) throw new Error("No crypto wallet found");
-            await window.ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [
-                ...network[networkName]
-                ]
-              });
-        } 
-        catch (err) {
-          
-            console.log("Error message: " + err.message);
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                ...network[networkName]
-              }
-            ]
-          });
-        }
-        }
-      };
-
-      const selectNetwork =(e)=>{
-        let val = e.target.value
-        let d = e.target.getAttribute("data-net")
-        console.log(d)
-        console.log(val)
-        setChain_id(d)
-        setChain(val)
-      }
-
-      
-
+    
 
   return (
-   <div className='block m-auto w-10 bg-green-400'>
-    <p>item</p>
-    {connectors.map((item, index)=>{
-        return(
-            <div 
-                key={index} 
-                style={{display: "flex", flexDirection: "column"}}
-                onClick={()=>openModal(`${item.connectorId}`)}
-                >
-            <item.icon  width="40px" className="mb-1"></item.icon>
-            <span>{item.title}</span>
 
+  <div>
+   <div className='block m-auto w-6/12 p-4 text-center'>
+    <p>Connect Wallet</p>
+    <p>{web3reactContext?.account}</p>
 
-            </div>
-        )
-    })}
+    
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="25" name="network" value="cronos" />Cronos
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="56" name="network" value="bsc" />BSC
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="137" name="network" value="polygon"/>polygon
-     <button onClick={()=>openModal()}>Connect</button>
-    <button onClick={()=>disconnect()}>Disconnect</button>
    </div>
+      <button className='w-20 block m-auto bg-yellow-300 p-2 rounded-lg' onClick={()=> setShowModal(!showModal)}>Connect</button>
+      {web3reactContext?.account? (
+      <button className='w-20 block m-auto bg-yellow-200 p-2 rounded-lg' onClick={()=> {web3reactContext.deactivate();}}>Disconnect</button>
+      ): ""}
+
+    <div>
+      <ConnectModal 
+        getWalletConnect={getWalletConnect} 
+        getChainID={getChainID}
+        getchain={getchain}
+        chain={chain}
+        setChain={setChain}
+        injected={injected}
+        setChain_id={setChain_id}
+        chain_id={chain_id} 
+        isVisible={showModal} 
+        setShowModal={setShowModal} 
+        showModal={showModal} 
+        connectors={connectors}
+        web3reactContext={web3reactContext} />
+</div>
+  </div>
   )
 }
 

@@ -26,6 +26,7 @@ export default function HookWalletConnect (){
   function getchain () {return chain}
 
   return [getWalletConnect, getChainID, getchain, chain, setChain, injected, setChain_id, chain_id]
+
 }
 
   //metamask

@@ -1,4 +1,6 @@
 import { Web3ReactProvider } from '@web3-react/core'
+import { Web3Provider } from '@ethersproject/providers';
+
 import '../styles/globals.css'
 
 export default function App({ Component, pageProps }) {
