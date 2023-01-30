@@ -8,8 +8,7 @@ export default function HookWalletConnect (){
   };
   const [chain_id, setChain_id] = useState(25)
   const getChainID = ()=> {return chain_id}
-  
-  
+    
   function getWalletConnect(){
     const walletconnect = new WalletConnectConnector({
       rpc: { 137: RPC_URLS[137] },
@@ -18,9 +17,7 @@ export default function HookWalletConnect (){
       chainId: getChainID(),
     })
     return walletconnect
-  }
-
-  
+  } 
   
   const [chain, setChain] = useState("cronos")
   function getchain () {return chain}

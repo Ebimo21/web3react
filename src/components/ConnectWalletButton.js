@@ -20,17 +20,13 @@ const ConnectWalletButton = () => {
       setChain_id(d)
       setChain(val)
       console.log("chain_id: " + chain_id)
-    }
-    
-
+    }    
   return (
-
   <div>
    <div className='block m-auto w-6/12 p-4 text-center'>
     <p>Connect Wallet</p>
     <p>{web3reactContext?.account}</p>
-
-    
+   
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="25" name="network" value="cronos" />Cronos
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="56" name="network" value="bsc" />BSC
     <input type="radio" onChange={(e)=>selectNetwork(e)} data-net="137" name="network" value="polygon"/>polygon
